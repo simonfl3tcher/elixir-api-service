@@ -24,7 +24,6 @@ ADD . .
 RUN mix compile
 
 # Compile assets
-RUN npm run compile
 RUN mix phoenix.digest
 
 # Expose this port from the docker container to the host machine
