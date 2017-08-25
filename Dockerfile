@@ -7,7 +7,6 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # Copy ENV from host to container
-ENV HOST_VARS inject_here
 
 RUN apt-get update && apt-get install -y \
     curl \
