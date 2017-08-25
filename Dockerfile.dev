@@ -1,0 +1,27 @@
+# Set the Docker image you want to base your image off.
+# I chose this one because it has Elixir preinstalled.
+FROM trenpixster/elixir:1.4.4
+
+# Compile app
+RUN mkdir /app
+WORKDIR /app
+
+# Install node
+RUN curl -sL https://deb.nodesource.com/setup_5.x | \
+    bash - && apt-get install -y \
+    inotify-tools \
+    libfontconfig1 \
+    libfontconfig1-dev \
+    nodejs \
+    wget
+
+# Install Elixir Deps
+ADD mix.* ./
+RUN mix local.hex --force
+RUN mix local.rebar
+RUN mix deps.get
+
+# Install app
+WORKDIR /app
+ADD . .
+RUN mix compile
