@@ -58,7 +58,15 @@ config :logger, level: :info
 #
 #     config :climb_trainer, ClimbTrainerWeb.Endpoint, server: true
 #
+config :climb_trainer, ClimbTrainerWeb.Endpoint,
+  secret_key_base: System.get_env("SECRET_KEY_BASE")
 
-# Finally import the config/prod.secret.exs
-# which should be versioned separately.
-import_config "prod.secret.exs"
+# Configure your database
+config :climb_trainer, ClimbTrainer.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  database: System.get_env("RDS_DB_NAME"),
+  username: System.get_env("RDS_USERNAME"),
+  password: System.get_env("RDS_PASSWORD"),
+  hostname: System.get_env("RDS_HOSTNAME"),
+  port: System.get_env("RDS_PORT") || 5432,
+  pool_size: 15
