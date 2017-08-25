@@ -1,6 +1,6 @@
 # Set the Docker image you want to base your image off.
 # I chose this one because it has Elixir preinstalled.
-FROM trenpixster/elixir:1.4.4
+FROM elixir:1.4
 
 # Compile app
 RUN mkdir /app

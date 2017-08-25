@@ -1,35 +1,35 @@
-FROM ubuntu:14.04
-
-# Elixir needs to be compiled against UTF-8
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+# Use elixir base image
+FROM elixir:1.4
 
 # Copy ENV from host to container
+ENV HOST_VARS inject_here
 
-RUN apt-get update && apt-get install -y \
-    curl \
-    libfontconfig1 \
-    libfontconfig1-dev \
-    git \
-    wget
+# Install node
+RUN curl -sL https://deb.nodesource.com/setup_5.x | \
+    bash - && apt-get install -y nodejs inotify-tools
 
-RUN wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && dpkg -i erlang-solutions_1.0_all.deb
-RUN apt-get update && apt-get install -y esl-erlang elixir
-
-WORKDIR /app/user
+# Install Elixir Deps
+WORKDIR /app
 ADD mix.* ./
-RUN mix local.hex --force
 RUN mix local.rebar --force
+RUN mix local.hex --force
 RUN mix deps.get
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && apt-get install -y nodejs
+# Install Node Deps
+WORKDIR /tmp
 
-RUN mix compile && \
-    mix phoenix.digest
+# Install app
+WORKDIR /app
+ADD . .
+RUN mix compile
 
+# Compile assets
+RUN npm run compile
+RUN mix phoenix.digest
+
+# Expose this port from the docker container to the host machine
 EXPOSE 4000
 
-CMD mix ecto.migrate && \
-    mix phoenix.server
+# Run migrations, start server
+RUN mix ecto.migrate
+CMD mix phx.server

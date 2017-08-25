@@ -15,7 +15,8 @@ use Mix.Config
 # which you typically run after static files are built.
 config :climb_trainer, ClimbTrainerWeb.Endpoint,
   load_from_system_env: true,
-  url: [host: "example.com", port: 80],
+  url: [host: System.get_env("HOST"), port: {:system, "PORT"}],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -58,9 +59,6 @@ config :logger, level: :info
 #
 #     config :climb_trainer, ClimbTrainerWeb.Endpoint, server: true
 #
-config :climb_trainer, ClimbTrainerWeb.Endpoint,
-  secret_key_base: System.get_env("SECRET_KEY_BASE")
-
 # Configure your database
 config :climb_trainer, ClimbTrainer.Repo,
   adapter: Ecto.Adapters.Postgres,
