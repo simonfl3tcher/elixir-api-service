@@ -15,5 +15,5 @@ config :climb_trainer, ClimbTrainer.Repo,
   username: "postgres",
   password: "postgres",
   database: "climb_trainer_test",
-  hostname: "localhost",
+  hostname: "postgres",
   pool: Ecto.Adapters.SQL.Sandbox
