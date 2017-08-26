@@ -1,12 +1,37 @@
-FROM ubuntu:12.04
+FROM ubuntu:14.04
 
-RUN apt-get update
-RUN apt-get install -y nginx zip curl
+# Elixir needs to be compiled against UTF-8
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-RUN curl -o /usr/share/nginx/www/master.zip -L https://codeload.github.com/gabrielecirulli/2048/zip/master
-RUN cd /usr/share/nginx/www/ && unzip master.zip && mv 2048-master/* . && rm -rf 2048-master master.zip
+# Copy ENV from host to container
+ENV HOST_VARS inject_here
 
-EXPOSE 80
+RUN apt-get update && apt-get install -y \
+    curl \
+    libfontconfig1 \
+    libfontconfig1-dev \
+    git \
+    wget
 
-CMD ["/usr/sbin/nginx", "-c", "/etc/nginx/nginx.conf"]
+RUN wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && dpkg -i erlang-solutions_1.0_all.deb
+RUN apt-get update && apt-get install -y esl-erlang elixir
+
+WORKDIR /app/user
+ADD mix.* ./
+RUN mix local.hex --force
+RUN mix local.rebar --force
+RUN mix deps.get
+
+WORKDIR /app/user
+ADD . /app/user/
+
+RUN mix compile && \
+    mix phoenix.digest
+
+EXPOSE 4000
+
+CMD mix ecto.migrate && \
+    mix phoenixx.server
