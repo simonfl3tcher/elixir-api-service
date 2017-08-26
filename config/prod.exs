@@ -16,8 +16,8 @@ use Mix.Config
 config :climb_trainer, ClimbTrainerWeb.Endpoint,
   load_from_system_env: true,
   url: [host: System.get_env("HOST"), port: {:system, "PORT"}],
-  secret_key_base: System.get_env("SECRET_KEY_BASE"),
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -62,9 +62,6 @@ config :logger, level: :info
 # Configure your database
 config :climb_trainer, ClimbTrainer.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: System.get_env("RDS_DATABASE"),
-  username: System.get_env("RDS_USERNAME"),
-  password: System.get_env("RDS_PASSWORD"),
-  hostname: System.get_env("RDS_HOSTNAME"),
-  port: System.get_env("RDS_PORT") || 5432,
-  pool_size: 15
+  url: System.get_env("DATABASE_URL"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  ssl: true
