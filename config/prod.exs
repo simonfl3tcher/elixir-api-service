@@ -62,7 +62,7 @@ config :logger, level: :info
 # Configure your database
 config :climb_trainer, ClimbTrainer.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: System.get_env("RDS_DB_NAME"),
+  database: System.get_env("RDS_DATABASE"),
   username: System.get_env("RDS_USERNAME"),
   password: System.get_env("RDS_PASSWORD"),
   hostname: System.get_env("RDS_HOSTNAME"),
