@@ -34,4 +34,16 @@ Unit/Integration tests:
   docker-compose run web mix test
 ```
 
+### Deployment
 
+Deployment is done through Heroku right now due to ease of use. Useful debugging commands:
+
+Console:
+```
+  heroku run "POOL_SIZE=2 iex -S mix"
+```
+
+Migrations:
+```
+  heroku run "POOL_SIZE=2 mix ecto.migrate"
+```
