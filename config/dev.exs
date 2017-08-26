@@ -53,5 +53,5 @@ config :climb_trainer, ClimbTrainer.Repo,
   username: "postgres",
   password: "postgres",
   database: "climb_trainer_dev",
-  hostname: "postgres",
+  hostname: "localhost",
   pool_size: 10
