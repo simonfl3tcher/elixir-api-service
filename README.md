@@ -1,7 +1,5 @@
 # Climb Trainer
 
-[ ![Codeship Status for simonfl3tcher/climbtrainer-server](https://app.codeship.com/projects/a7a405a0-6c7d-0135-7605-62e9e543e794/status?branch=master)](https://app.codeship.com/projects/242268)
-
 ### Local Development
 
 To get started, run the following commands:
